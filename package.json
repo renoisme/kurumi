@@ -1,0 +1,19 @@
+{
+  "name": "kurumi",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": false,
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "build": "rm -rf dist && bun run build.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "discord.js": "^14.18.0"
+  }
+}

@@ -3,7 +3,7 @@ FROM oven/bun:latest
 WORKDIR /bot
 
 COPY package.json /bot/
-COPY bun.lockb /bot/
+COPY bun.lock /bot/
 
 RUN bun install
 

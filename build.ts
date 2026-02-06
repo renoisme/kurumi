@@ -1,37 +1,29 @@
 import { build } from 'bun';
-import { readdir, stat } from 'fs/promises';
+import { readdirSync, statSync } from 'fs';
 import { join } from 'path';
 
-const getAllFiles = async (dirPath: string, arrayOfFiles: string[] = []): Promise<string[]> => {
-	try {
-		const files = await readdir(dirPath);
-		for (const file of files) {
-			const filePath = join(dirPath, file);
-			const stats = await stat(filePath);
-			if (stats.isDirectory()) {
-				await getAllFiles(filePath, arrayOfFiles);
-			} else if (file.endsWith('.ts')) {
-				arrayOfFiles.push(filePath);
-			}
+// ディレクトリ内のすべての.tsファイルを再帰的に取得する関数
+const getAllFiles = (dirPath: string, arrayOfFiles: string[] = []): string[] => {
+	const files = readdirSync(dirPath);
+
+	files.forEach((file) => {
+		const filePath = join(dirPath, file);
+		if (statSync(filePath).isDirectory()) {
+			arrayOfFiles = getAllFiles(filePath, arrayOfFiles);
+		} else if (file.endsWith('.ts')) {
+			arrayOfFiles.push(filePath);
 		}
-	} catch (error) {
-		console.error(`📛 ${dirPath}:`, error);
-	}
+	});
+
 	return arrayOfFiles;
 };
 
-(async () => {
-	try {
-		const srcFiles = await getAllFiles('./src');
-		const entrypoints = [...srcFiles];
+// srcディレクトリとmodulesディレクトリ内のすべての.tsファイルを取得
+const srcFiles: string[] = getAllFiles('./src');
+const entrypoints: string[] = [...srcFiles];
 
-		await build({
-			entrypoints,
-			outdir: './dist',
-			target: 'bun',
-		});
-		console.log('✅ build complete');
-	} catch (error) {
-		console.error('📛 build error:', error);
-	}
-})();
+await build({
+	entrypoints,
+	outdir: './dist',
+	target: 'bun',
+});

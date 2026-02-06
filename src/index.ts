@@ -1,4 +1,6 @@
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
+import fs from 'fs';
+import path from 'path';
 
 const client = new Client({
 	intents: [
@@ -10,10 +12,7 @@ const client = new Client({
 	partials: [Partials.Channel, Partials.Message, Partials.User, Partials.GuildMember],
 });
 
-import fs from 'fs';
-import path from 'path';
-
-const eventsPath = path.join(__dirname, 'events');
+const eventsPath = path.join(__dirname, 'event');
 const eventFiles = fs.readdirSync(eventsPath).filter((file) => file.endsWith('.ts'));
 
 eventFiles.forEach((file) => {

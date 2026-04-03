@@ -1,7 +1,19 @@
+import { Mistral } from '@mistralai/mistralai';
 import { Events, Guild, GuildMember, Message, TextChannel } from 'discord.js';
 
 const renoisme = Bun.env.RENOISME || '';
 const ruleChannelId = Bun.env.RULE_CHANNEL_ID || '';
+
+const ai = new Mistral({ apiKey: Bun.env.MISTRAL_API_KEY });
+
+let chat = await ai.beta.conversations.start({
+	agentId: 'ag_019cfff4305176f28d92162ddfa81b7a',
+	inputs: 'こんにちは',
+});
+
+function getServerMemberCount(guild: Guild): string {
+	return 'サーバー人数は' + guild.memberCount + '人です！';
+}
 
 export default {
 	name: Events.MessageCreate,
